@@ -12,8 +12,9 @@ ENEM_2019 <- data.table::fread(input='MICRODADOS_ENEM_2019.csv',
                                showProgress = TRUE,
                                encoding = 'UTF-8')
 
-sum(is.na(ENEM_2019$SG_UF_RESIDENCIA))
+
 ENEM_2019_MT = subset(ENEM_2019, SG_UF_RESIDENCIA=="MT")
+ENEM_2019_SP = subset(ENEM_2019, SG_UF_RESIDENCIA=="SP")
 #ENEM_2019_MT = ENEM_2019[ENEM_2019$SG_UF_RESIDENCIA == 'MT',]
 dplyr::count(ENEM_2019, SG_UF_RESIDENCIA)
 dplyr::count(ENEM_2019, SG_UF_PROVA)
@@ -51,4 +52,5 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
   return(tamanhos)
 }
 
-tamanhos_n = calcular_n_amostragem_estratificada(ENEM_2019_MT, c(0.05, 0.1, 0.15,.2))
+tamanhos_n_MT = calcular_n_amostragem_estratificada(ENEM_2019_MT, c(0.05, 0.1, 0.15,.2))
+tamanhos_n_SP = calcular_n_amostragem_estratificada(ENEM_2019_SP, c(0.05, 0.1, 0.15,.2))
