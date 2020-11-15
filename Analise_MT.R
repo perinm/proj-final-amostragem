@@ -33,16 +33,26 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
   soma_denominador = 0
   soma_numerador = 0
   municipios = unique(dataset$CO_MUNICIPIO_RESIDENCIA)
+  generos = unique(dataset$TP_SEXO)
   for(municipio in municipios){
-    dataset_i = subset(dataset, CO_MUNICIPIO_RESIDENCIA==municipio)
-    N_i = nrow(dataset_i)
-    #dp_i = sd(ENEM_2019_MT_i$NU_NOTA_MT)
-    var_i = var(dataset_i$NU_NOTA_MT, na.rm = TRUE)
-    w_i = N_i/N
-    soma_numerador = soma_numerador + ((N_i**2)*var_i)/w_i
-    soma_denominador = soma_denominador + (N_i)*var_i
+    dataset_municipio = subset(dataset, CO_MUNICIPIO_RESIDENCIA==municipio)
+    for(genero in generos){
+      dataset_municipio_genero = subset(dataset_municipio, TP_SEXO==genero)
+      N_i = nrow(dataset_municipio_genero)
+      var_i = var(dataset_municipio_genero$NU_NOTA_MT, na.rm = TRUE)
+      w_i = N_i/N
+      soma_n = ((N_i**2)*var_i)/w_i
+      soma_d = (N_i)*var_i
+      soma_numerador = soma_numerador + (if(is.na(soma_n)) 0 else soma_n)
+      soma_denominador = soma_denominador + (if(is.na(soma_d)) 0 else soma_d)
+    }
   }
   tamanhos = list()
+  print(N_i)
+  print(N)
+  print(var_i)
+  print(w_i)
+  print(soma_numerador)
   for(erro in erros){
     B = erro
     D = (B**2)/4
