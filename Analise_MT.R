@@ -1,7 +1,7 @@
 if(!require(data.table)){install.packages('data.table')}
 
 setwd("/home/hariseldon/Documents/IESB/Proj_final_amostragem_miest/Enem 2019")  
-
+options(stringsAsFactors=FALSE)
 #memory.limit(24576)
 
 ENEM_2019 <- data.table::fread(input='MICRODADOS_ENEM_2019.csv',
@@ -48,11 +48,6 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
     }
   }
   tamanhos = list()
-  print(N_i)
-  print(N)
-  print(var_i)
-  print(w_i)
-  print(soma_numerador)
   for(erro in erros){
     B = erro
     D = (B**2)/4
@@ -64,3 +59,34 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
 
 tamanhos_n_MT = calcular_n_amostragem_estratificada(ENEM_2019_MT, c(0.05, 0.1, 0.15,.2))
 tamanhos_n_SP = calcular_n_amostragem_estratificada(ENEM_2019_SP, c(0.05, 0.1, 0.15,.2))
+
+media_de_amostragem = function(dataset, n){
+  compData = data.frame(municipio = numeric(0), genero = character(0), media = numeric(0))
+  municipios = unique(dataset$CO_MUNICIPIO_RESIDENCIA)
+  generos = unique(dataset$TP_SEXO)
+  N = nrow(dataset)
+  porcentagem = n/N
+  for(municipio in municipios){
+    dataset_municipio = subset(dataset, CO_MUNICIPIO_RESIDENCIA==municipio)
+    for(genero in generos){
+      dataset_municipio_genero = subset(dataset_municipio, TP_SEXO==genero)
+      n_municipio_genero = ceiling(porcentagem * nrow(dataset_municipio_genero))
+      amostra = dplyr::sample_n(dataset_municipio_genero, n_municipio_genero)
+      media_mat = mean(amostra$NU_NOTA_MT, na.rm = TRUE)
+      compData[nrow(compData)+1, ] = c(municipio, genero, media_mat)
+    }
+  }
+  return(compData)
+}
+
+media_MT = media_de_amostragem(ENEM_2019_MT, nrow(ENEM_2019_MT))
+media_MT_5 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[1]])
+media_MT_10 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[2]])
+media_MT_15 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[3]])
+media_MT_20 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[4]])
+
+media_SP = media_de_amostragem(ENEM_2019_MT, nrow(ENEM_2019_SP))
+media_SP_5 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[1]])
+media_SP_10 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[2]])
+media_SP_15 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[3]])
+media_SP_20 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[4]])
