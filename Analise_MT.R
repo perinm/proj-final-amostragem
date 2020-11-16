@@ -80,13 +80,29 @@ media_de_amostragem = function(dataset, n){
 }
 
 media_MT = media_de_amostragem(ENEM_2019_MT, nrow(ENEM_2019_MT))
-media_MT_5 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[1]])
+media_MT_05 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[1]])
+media_MT_05$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_05$media))**2
+print(sqrt(sum(media_MT_05$diff_ao_quadrado)))
 media_MT_10 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[2]])
+media_MT_10$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_10$media))**2
+print(sqrt(sum(media_MT_10$diff_ao_quadrado)))
 media_MT_15 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[3]])
+media_MT_15$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_15$media))**2
+print(sqrt(sum(media_MT_15$diff_ao_quadrado)))
 media_MT_20 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[4]])
+media_MT_20$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_20$media))**2
+print(sqrt(sum(media_MT_20$diff_ao_quadrado)))
 
-media_SP = media_de_amostragem(ENEM_2019_MT, nrow(ENEM_2019_SP))
-media_SP_5 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[1]])
+media_SP = media_de_amostragem(ENEM_2019_SP, nrow(ENEM_2019_SP))
+media_SP_05 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[1]])
+media_SP_05$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_05$media))**2
+print(sqrt(sum(media_SP_05$diff_ao_quadrado)))
 media_SP_10 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[2]])
+media_SP_10$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_10$media))**2
+print(sqrt(sum(media_SP_10$diff_ao_quadrado)))
 media_SP_15 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[3]])
+media_SP_15$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_15$media))**2
+print(sqrt(sum(media_SP_15$diff_ao_quadrado)))
 media_SP_20 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[4]])
+media_SP_20$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_20$media))**2
+print(sqrt(sum(media_SP_20$diff_ao_quadrado)))
