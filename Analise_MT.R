@@ -37,6 +37,8 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
   for(municipio in municipios){
     dataset_municipio = subset(dataset, CO_MUNICIPIO_RESIDENCIA==municipio)
     for(genero in generos){
+      # parar iteração caso NU_NOTA_MT para dataset_minucipio_genero só tiver NA
+      # e remover if(is.na()) de soma_numerador e soma_denominador
       dataset_municipio_genero = subset(dataset_municipio, TP_SEXO==genero)
       N_i = nrow(dataset_municipio_genero)
       var_i = var(dataset_municipio_genero$NU_NOTA_MT, na.rm = TRUE)
@@ -58,9 +60,15 @@ calcular_n_amostragem_estratificada = function(dataset,erros){
 }
 
 tamanhos_n_MT = calcular_n_amostragem_estratificada(ENEM_2019_MT, c(0.05, 0.1, 0.15,.2))
+print(nrow(ENEM_2019_MT))
+print(tamanhos_n_MT)
 tamanhos_n_SP = calcular_n_amostragem_estratificada(ENEM_2019_SP, c(0.05, 0.1, 0.15,.2))
+print(nrow(ENEM_2019_SP))
+print(tamanhos_n_SP)
 
-media_de_amostragem = function(dataset, n){
+
+media_de_estratos_de_amostragem = function(dataset, n){
+  # adicionar prova que o uso de porcentagem realmente é similar ao W_i
   compData = data.frame(municipio = numeric(0), genero = character(0), media = numeric(0))
   municipios = unique(dataset$CO_MUNICIPIO_RESIDENCIA)
   generos = unique(dataset$TP_SEXO)
@@ -80,29 +88,42 @@ media_de_amostragem = function(dataset, n){
 }
 
 media_MT = media_de_amostragem(ENEM_2019_MT, nrow(ENEM_2019_MT))
+
 media_MT_05 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[1]])
 media_MT_05$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_05$media))**2
-print(sqrt(sum(media_MT_05$diff_ao_quadrado)))
+print(sqrt(sum(media_MT_05$diff_ao_quadrado)/nrow(media_MT)))
+
 media_MT_10 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[2]])
 media_MT_10$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_10$media))**2
-print(sqrt(sum(media_MT_10$diff_ao_quadrado)))
+print(sqrt(sum(media_MT_10$diff_ao_quadrado)/nrow(media_MT)))
+
 media_MT_15 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[3]])
 media_MT_15$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_15$media))**2
-print(sqrt(sum(media_MT_15$diff_ao_quadrado)))
+print(sqrt(sum(media_MT_15$diff_ao_quadrado)/nrow(media_MT)))
+
 media_MT_20 = media_de_amostragem(ENEM_2019_MT, tamanhos_n_MT[[4]])
 media_MT_20$diff_ao_quadrado = (as.numeric(media_MT$media) - as.numeric(media_MT_20$media))**2
-print(sqrt(sum(media_MT_20$diff_ao_quadrado)))
+print(sqrt(sum(media_MT_20$diff_ao_quadrado)/nrow(media_MT)))
 
 media_SP = media_de_amostragem(ENEM_2019_SP, nrow(ENEM_2019_SP))
+
 media_SP_05 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[1]])
 media_SP_05$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_05$media))**2
-print(sqrt(sum(media_SP_05$diff_ao_quadrado)))
+print(sqrt(sum(media_SP_05$diff_ao_quadrado)/nrow(media_SP)))
+
 media_SP_10 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[2]])
 media_SP_10$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_10$media))**2
-print(sqrt(sum(media_SP_10$diff_ao_quadrado)))
+print(sqrt(sum(media_SP_10$diff_ao_quadrado)/nrow(media_SP)))
+
 media_SP_15 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[3]])
 media_SP_15$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_15$media))**2
-print(sqrt(sum(media_SP_15$diff_ao_quadrado)))
+print(sqrt(sum(media_SP_15$diff_ao_quadrado)/nrow(media_SP)))
+
 media_SP_20 = media_de_amostragem(ENEM_2019_SP, tamanhos_n_SP[[4]])
 media_SP_20$diff_ao_quadrado = (as.numeric(media_SP$media) - as.numeric(media_SP_20$media))**2
-print(sqrt(sum(media_SP_20$diff_ao_quadrado)))
+print(sqrt(sum(media_SP_20$diff_ao_quadrado)/nrow(media_SP)))
+
+# Análise final
+# Primeiro entre generos de cada estado e após, entre os generos dos dois estados
+
+# Aplicar mudanças e considerações para a parte escrita
